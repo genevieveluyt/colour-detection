@@ -31,6 +31,7 @@ namespace Polygon_Detection
 
         List<Point> points;
         float straightAngleTolerance = 10; // in degrees
+        Image<Rgb, Byte> img;
         
         public Form1()
         {
@@ -41,7 +42,8 @@ namespace Polygon_Detection
         {
             try
             {
-                imgImage.Image = new Image<Rgb, Byte>("..\\..\\resources\\" + txtImagePath.Text);
+                img = new Image<Rgb, Byte>("..\\..\\resources\\" + txtImagePath.Text);
+                imgImage.Image = img;
             }
             catch (System.IO.FileNotFoundException)
             {

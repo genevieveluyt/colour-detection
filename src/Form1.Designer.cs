@@ -39,6 +39,7 @@
             // 
             // imgImage
             // 
+            this.imgImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.imgImage.Location = new System.Drawing.Point(12, 12);
             this.imgImage.Name = "imgImage";
             this.imgImage.Size = new System.Drawing.Size(400, 300);
@@ -85,7 +86,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(729, 356);
+            this.ClientSize = new System.Drawing.Size(729, 322);
             this.Controls.Add(this.txtFilename);
             this.Controls.Add(this.btnGetImage);
             this.Controls.Add(this.txtImagePath);
