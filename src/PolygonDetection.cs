@@ -4,14 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Emgu.CV;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV.UI;
+
 namespace Polygon_Detection
 {
     public static class PolygonDetection
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-
+        
         struct Point
         {
             public int x, y;
@@ -25,6 +27,7 @@ namespace Polygon_Detection
         
         static List <Point> points;
         static float straightAngleTolerance = 10; // in degrees
+        static Image<Rgb, Byte> img;
 
         static void Main()
         {
