@@ -190,6 +190,7 @@ namespace Polygon_Detection
             {
                 labelFileName.Text = "???";
                 txtOutput.Text = "Enter a file name";
+                imgImage.Image = null;
                 txtFileName.Clear();
                 return;
             }
