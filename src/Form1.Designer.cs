@@ -30,10 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             this.imgImage = new Emgu.CV.UI.ImageBox();
-            this.txtResults = new System.Windows.Forms.TextBox();
-            this.txtImagePath = new System.Windows.Forms.TextBox();
+            this.txtOutput = new System.Windows.Forms.TextBox();
+            this.txtFileName = new System.Windows.Forms.TextBox();
             this.btnGetImage = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelFileName = new System.Windows.Forms.Label();
+            this.btnPrevImg = new System.Windows.Forms.Button();
+            this.btnNextImg = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.imgImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,22 +48,21 @@
             this.imgImage.TabIndex = 2;
             this.imgImage.TabStop = false;
             // 
-            // txtResults
+            // txtOutput
             // 
-            this.txtResults.Location = new System.Drawing.Point(434, 12);
-            this.txtResults.Multiline = true;
-            this.txtResults.Name = "txtResults";
-            this.txtResults.ReadOnly = true;
-            this.txtResults.Size = new System.Drawing.Size(280, 167);
-            this.txtResults.TabIndex = 3;
+            this.txtOutput.Location = new System.Drawing.Point(434, 12);
+            this.txtOutput.Multiline = true;
+            this.txtOutput.Name = "txtOutput";
+            this.txtOutput.ReadOnly = true;
+            this.txtOutput.Size = new System.Drawing.Size(280, 167);
+            this.txtOutput.TabIndex = 3;
             // 
-            // txtImagePath
+            // txtFileName
             // 
-            this.txtImagePath.Location = new System.Drawing.Point(432, 234);
-            this.txtImagePath.Name = "txtImagePath";
-            this.txtImagePath.Size = new System.Drawing.Size(282, 20);
-            this.txtImagePath.TabIndex = 4;
-            this.txtImagePath.Text = "rectangle-01.jpg";
+            this.txtFileName.Location = new System.Drawing.Point(432, 234);
+            this.txtFileName.Name = "txtFileName";
+            this.txtFileName.Size = new System.Drawing.Size(282, 20);
+            this.txtFileName.TabIndex = 4;
             // 
             // btnGetImage
             // 
@@ -73,27 +74,52 @@
             this.btnGetImage.UseVisualStyleBackColor = true;
             this.btnGetImage.Click += new System.EventHandler(this.btnGetImage_Click);
             // 
-            // label1
+            // labelFileName
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(431, 208);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(180, 15);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Filename (in resources folder):";
+            this.labelFileName.AutoSize = true;
+            this.labelFileName.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFileName.Location = new System.Drawing.Point(431, 208);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(183, 15);
+            this.labelFileName.TabIndex = 7;
+            this.labelFileName.Text = "File name (in resources folder):";
+            // 
+            // btnPrevImg
+            // 
+            this.btnPrevImg.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrevImg.Location = new System.Drawing.Point(644, 273);
+            this.btnPrevImg.Name = "btnPrevImg";
+            this.btnPrevImg.Size = new System.Drawing.Size(29, 30);
+            this.btnPrevImg.TabIndex = 8;
+            this.btnPrevImg.Text = "<";
+            this.btnPrevImg.UseVisualStyleBackColor = true;
+            this.btnPrevImg.Click += new System.EventHandler(this.btnPrevImg_Click);
+            // 
+            // btnNextImg
+            // 
+            this.btnNextImg.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNextImg.Location = new System.Drawing.Point(675, 273);
+            this.btnNextImg.Name = "btnNextImg";
+            this.btnNextImg.Size = new System.Drawing.Size(29, 30);
+            this.btnNextImg.TabIndex = 9;
+            this.btnNextImg.Text = ">";
+            this.btnNextImg.UseVisualStyleBackColor = true;
+            this.btnNextImg.Click += new System.EventHandler(this.btnNextImg_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(729, 322);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.btnNextImg);
+            this.Controls.Add(this.btnPrevImg);
+            this.Controls.Add(this.labelFileName);
             this.Controls.Add(this.btnGetImage);
-            this.Controls.Add(this.txtImagePath);
-            this.Controls.Add(this.txtResults);
+            this.Controls.Add(this.txtFileName);
+            this.Controls.Add(this.txtOutput);
             this.Controls.Add(this.imgImage);
             this.Name = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.imgImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -103,10 +129,12 @@
         #endregion
 
         private Emgu.CV.UI.ImageBox imgImage;
-        private System.Windows.Forms.TextBox txtResults;
-        private System.Windows.Forms.TextBox txtImagePath;
+        private System.Windows.Forms.TextBox txtOutput;
+        private System.Windows.Forms.TextBox txtFileName;
         private System.Windows.Forms.Button btnGetImage;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelFileName;
+        private System.Windows.Forms.Button btnPrevImg;
+        private System.Windows.Forms.Button btnNextImg;
     }
 }
 
