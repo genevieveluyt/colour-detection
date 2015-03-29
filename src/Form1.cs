@@ -20,10 +20,11 @@ namespace Polygon_Detection
     {
 
         List<Point> points;
-        float straightAngleTolerance = 10;  // in degrees
+        float straightAngleTolerance = 10;      // in degrees
         Image<Rgb, Byte> img;
-        String[] res;                       // filenames of files in resources
-        int curImg;                         // index of file currently displayed in res array
+        String relPath = "..\\..\\test_images"; // relative path location of files
+        String[] filePaths;                     // filenames of files in folder with files
+        int curFile;                            // index of file currently displayed in filePaths array
 
 
         #region Find Shape
@@ -148,28 +149,29 @@ namespace Polygon_Detection
             InitializeComponent();
         }
 
-        // When form loads, get paths of all files in resources folder and store
+        // When form loads, get paths of all files in test_images folder and store
         // in String array and setup GUI with first file in the folder
         private void Form1_Load(object sender, EventArgs e)
         {
-            res = Directory.GetFiles("..\\..\\resources");              // store paths of a files in resources folder
+            filePaths = Directory.GetFiles(relPath);                // store paths of a files in resources folder
 
-            if (res.Length == 0)                                        // if no files in resources folder, display message
+            if (filePaths.Length == 0)                              // if no files in resources folder, display message
             {
                 imgImage.Image = null;
-                txtOutput.Text = "resources folder is empty!";
+                labelFileName.Text = "No Files";
+                txtOutput.Text = relPath + " folder is empty!";
                 return;
             }
 
             try
-            {                                                           // set up GUI with first file in resources folder
-                curImg = 0;
-                txtFileName.Text = Path.GetFileName(res[curImg]);
-                img = new Image<Rgb, Byte>(res[curImg]);
+            {                                                       // set up GUI with first file in resources folder
+                curFile = 0;
+                labelFileName.Text = Path.GetFileName(filePaths[curFile]);
+                img = new Image<Rgb, Byte>(filePaths[curFile]);
                 imgImage.Image = img;
                 findShape(img);
             }
-            catch (FileNotFoundException)
+            catch (System.ArgumentException)
             {
                 txtOutput.Text = "Unexpected file type";
             }
@@ -179,50 +181,61 @@ namespace Polygon_Detection
         #region Button Click Events
 
         // Attempts to retrieve image from specified file name in GUI.
-        // File must be in resources folder.
+        // File must be in test_images folder.
         private void btnGetImage_Click(object sender, EventArgs e)
         {
             txtOutput.Clear();
 
+            if (txtFileName.Text.Equals(""))
+            {
+                labelFileName.Text = "???";
+                txtOutput.Text = "Enter a file name";
+                txtFileName.Clear();
+                return;
+            }
+
             try
             {
-                img = new Image<Rgb, Byte>("..\\..\\resources\\" + txtFileName.Text);
+                img = new Image<Rgb, Byte>(relPath + "\\" + txtFileName.Text);
                 imgImage.Image = img;
                 findShape(img);
-                for (int i = 0; i < res.Length; i++)
+                for (int i = 0; i < filePaths.Length; i++)
                 {
-                    if (res[i].Equals(txtFileName.Text))
+                    if (filePaths[i].Equals(txtFileName.Text))
                     {
-                        curImg = i;
+                        curFile = i;
                         break;
                     }
                 }
             }
             catch (FileNotFoundException)
             {
+                labelFileName.Text = txtFileName.Text;
                 txtOutput.Text = "File not found";
                 imgImage.Image = null;
             }
             catch (System.ArgumentException)
             {
-                txtOutput.Text = "Illegal characters in path";
+                labelFileName.Text = txtFileName.Text;
+                txtOutput.Text = "Unexpected file type";
                 imgImage.Image = null;
             }
-            
+
+            txtFileName.Clear();
         }
 
-        // When next button clicked, goes to next file in resources folder
+        // When next button clicked, goes to next file in test_images folder
         // If currently on last file, will go to the first file in the folder
         private void btnNextImg_Click(object sender, EventArgs e)
         {
             txtOutput.Clear();
 
-            curImg = curImg == res.Length-1 ? 0 : curImg+1;             // if on last file, go to first
+            curFile = curFile == filePaths.Length-1 ? 0 : curFile+1;             // if on last file, go to first
 
             try
-            {                                                           // try to store and display image
-                txtFileName.Text = Path.GetFileName(res[curImg]);
-                img = new Image<Rgb, Byte>(res[curImg]);
+            {                                                                    // try to store and display image
+                labelFileName.Text = Path.GetFileName(filePaths[curFile]);
+                img = new Image<Rgb, Byte>(filePaths[curFile]);
                 imgImage.Image = img;
                 findShape(img);
             }
@@ -233,18 +246,18 @@ namespace Polygon_Detection
             }
         }
 
-        // When previous button clicked, goes to previous file in resources folder
+        // When previous button clicked, goes to previous file in test_images folder
         // If currently on first file, will go to last file in folder
         private void btnPrevImg_Click(object sender, EventArgs e)
         {
             txtOutput.Clear();
 
-            curImg = curImg == 0 ? res.Length-1 : curImg-1;         // if on first file, go to last
+            curFile = curFile == 0 ? filePaths.Length-1 : curFile-1;        // if on first file, go to last
 
             try
-            {                                                       // try to store and display image
-                txtFileName.Text = Path.GetFileName(res[curImg]);
-                img = new Image<Rgb, Byte>(res[curImg]);
+            {                                                               // try to store and display image
+                labelFileName.Text = Path.GetFileName(filePaths[curFile]);
+                img = new Image<Rgb, Byte>(filePaths[curFile]);
                 imgImage.Image = img;
                 findShape(img);
             }
@@ -254,6 +267,7 @@ namespace Polygon_Detection
                 imgImage.Image = null;
             }
         }
+
         #endregion
 
         public struct Point

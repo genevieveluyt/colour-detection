@@ -33,9 +33,10 @@
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.txtFileName = new System.Windows.Forms.TextBox();
             this.btnGetImage = new System.Windows.Forms.Button();
-            this.labelFileName = new System.Windows.Forms.Label();
+            this.labelFileNamePrompt = new System.Windows.Forms.Label();
             this.btnPrevImg = new System.Windows.Forms.Button();
             this.btnNextImg = new System.Windows.Forms.Button();
+            this.labelFileName = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.imgImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,12 +51,12 @@
             // 
             // txtOutput
             // 
-            this.txtOutput.Location = new System.Drawing.Point(434, 12);
+            this.txtOutput.Location = new System.Drawing.Point(434, 50);
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.ReadOnly = true;
             this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtOutput.Size = new System.Drawing.Size(280, 167);
+            this.txtOutput.Size = new System.Drawing.Size(280, 129);
             this.txtOutput.TabIndex = 3;
             // 
             // txtFileName
@@ -75,15 +76,15 @@
             this.btnGetImage.UseVisualStyleBackColor = true;
             this.btnGetImage.Click += new System.EventHandler(this.btnGetImage_Click);
             // 
-            // labelFileName
+            // labelFileNamePrompt
             // 
-            this.labelFileName.AutoSize = true;
-            this.labelFileName.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFileName.Location = new System.Drawing.Point(431, 208);
-            this.labelFileName.Name = "labelFileName";
-            this.labelFileName.Size = new System.Drawing.Size(183, 15);
-            this.labelFileName.TabIndex = 7;
-            this.labelFileName.Text = "File name (in resources folder):";
+            this.labelFileNamePrompt.AutoSize = true;
+            this.labelFileNamePrompt.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFileNamePrompt.Location = new System.Drawing.Point(431, 208);
+            this.labelFileNamePrompt.Name = "labelFileNamePrompt";
+            this.labelFileNamePrompt.Size = new System.Drawing.Size(64, 15);
+            this.labelFileNamePrompt.TabIndex = 7;
+            this.labelFileNamePrompt.Text = "File name:";
             // 
             // btnPrevImg
             // 
@@ -107,14 +108,25 @@
             this.btnNextImg.UseVisualStyleBackColor = true;
             this.btnNextImg.Click += new System.EventHandler(this.btnNextImg_Click);
             // 
+            // labelFileName
+            // 
+            this.labelFileName.AutoSize = true;
+            this.labelFileName.Font = new System.Drawing.Font("Arial Black", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFileName.Location = new System.Drawing.Point(431, 12);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(0, 23);
+            this.labelFileName.TabIndex = 10;
+            // 
             // Form1
             // 
+            this.AcceptButton = this.btnGetImage;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(729, 322);
+            this.Controls.Add(this.labelFileName);
             this.Controls.Add(this.btnNextImg);
             this.Controls.Add(this.btnPrevImg);
-            this.Controls.Add(this.labelFileName);
+            this.Controls.Add(this.labelFileNamePrompt);
             this.Controls.Add(this.btnGetImage);
             this.Controls.Add(this.txtFileName);
             this.Controls.Add(this.txtOutput);
@@ -133,9 +145,10 @@
         private System.Windows.Forms.TextBox txtOutput;
         private System.Windows.Forms.TextBox txtFileName;
         private System.Windows.Forms.Button btnGetImage;
-        private System.Windows.Forms.Label labelFileName;
+        private System.Windows.Forms.Label labelFileNamePrompt;
         private System.Windows.Forms.Button btnPrevImg;
         private System.Windows.Forms.Button btnNextImg;
+        private System.Windows.Forms.Label labelFileName;
     }
 }
 
