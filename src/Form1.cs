@@ -25,6 +25,122 @@ namespace Polygon_Detection
         String[] res;                       // filenames of files in resources
         int curImg;                         // index of file currently displayed in res array
 
+
+        #region Find Shape
+
+        // use this as main, right now it runs every time an image
+        // is displayed in the GUI
+        public void findShape(Image<Rgb, Byte> image)
+        {
+            points = getPoints(image);
+            points = getOuterPoints(points);
+            points = removeStraightAngles(points);
+
+            if (isShape(points)) {
+                if (!txtOutput.Text.Equals(""))                 // if textbox is not empty, insert new line first
+                    txtOutput.AppendText(Environment.NewLine);
+                txtOutput.AppendText(determineShape(points));
+            }
+            else
+            {
+                if (!txtOutput.Text.Equals(""))
+                    txtOutput.AppendText(Environment.NewLine);
+                txtOutput.AppendText("No shape found");
+            }
+
+        }
+
+        /* Attempts to locate all corners in an image
+         * @return List<Point> list of coordinates
+         */
+        public List<Point> getPoints(Image<Rgb, Byte> image) {
+            // Corner Harris
+            // return list of points
+
+            return null;
+        }
+
+        /* Isolates 'outer points' of a set of coordinates.
+         * That is, imagine an elastic wrapped around the set of points.
+         * Those touching the elastic are considered 'outer points'
+         * @return List<Point> list of coordinates of 'outer points' in
+         *      (counter)clockwise order
+         */
+        public List<Point> getOuterPoints(List<Point> points) {
+            // Convex Hull
+            // return list of points
+
+            return null;
+        }
+
+        /* If angle between any three consecutive points is close to 180
+         * (by margin of straightAngleTolerance), removes middle point
+         * @param List<Point> list of points that make outline of shape
+         *      in (counter)clockwise order
+         * @return List<Point> list of points identical to list passed in
+         *      excluding those in the middle of straight angles
+         */
+        public List<Point> removeStraightAngles(List<Point> points) {
+            // for (every three consecutive points, a, b, and c) {
+            //     angle = getSmallestAngle(a, b, c)
+            //     if (angle is between 180+straightAngleTolerance and 180-straightAngleTolerance) {
+            //         remove point b from list
+            //     }
+            // }
+            // return list of points
+
+            return null;
+        }
+
+        /* Identifies the smallest angle between lines a-b and b-c
+         * ie. if 90 degrees and 270 degrees are possible, will return 90
+         * @return double smallest angle in degrees
+         */
+        public double getSmallestAngle(Point a, Point b, Point c) {
+            // vector A = vector a - vector b        // A.x = a.x - b.x; A.y = a.y - b.y
+            //     vector B = vector c - vector b
+            //     angle = arccos ( (vector A dot product vector B) / (magnitude vector A * magnitude vector B) )    
+            // use Math.Acos() for arccos which gives radians
+            //         // there is a radiansToDegrees method in the AERO code already??
+            //         // dot product is A.x * B.x + A.y * B.y
+            //         // magnitude of vector A is sqrt( (A.x)^2 + (A.y)^2 )
+    
+            //     return (angle is less than 180 ? angle : 180 - angle)
+            //         // ternary operator
+
+            return 0;
+        }
+
+        /* Attempts to determine if there is significant evidence that a
+         * set of points makes the outline of a polygon
+         * @return true if between 3 and 8 points (inclusive)
+         */
+        public bool isShape(List<Point> points) {
+            //     if (list length more than 8)
+            //         return false;
+            //     else if (list length less than 8)
+            //         return false;
+            //     else
+            //         return true;
+
+            return false;
+        }
+
+        /* Attempts to determine what shape a set of points makes the outline of
+         * @return one of "triangle", "rectangle", "pentagon", "hexagon",
+         *      "heptagon", "octagon", or "unrecognized shape"
+         */
+        public String determineShape(List<Point> points) {
+            // switch (list length ie number of corners) {
+            //     case 3: return “triangle”; break;
+            //     // etc
+            //     default: return “unknown”;
+            // }
+
+            return "";
+        }
+        #endregion
+
         #region Form Setup
 
         public Form1()
@@ -51,10 +167,11 @@ namespace Polygon_Detection
                 txtFileName.Text = Path.GetFileName(res[curImg]);
                 img = new Image<Rgb, Byte>(res[curImg]);
                 imgImage.Image = img;
+                findShape(img);
             }
             catch (FileNotFoundException)
             {
-                txtOutput.Text = "Unexpected file type found in resources";
+                txtOutput.Text = "Unexpected file type";
             }
         }
         #endregion
@@ -71,6 +188,7 @@ namespace Polygon_Detection
             {
                 img = new Image<Rgb, Byte>("..\\..\\resources\\" + txtFileName.Text);
                 imgImage.Image = img;
+                findShape(img);
                 for (int i = 0; i < res.Length; i++)
                 {
                     if (res[i].Equals(txtFileName.Text))
@@ -106,10 +224,11 @@ namespace Polygon_Detection
                 txtFileName.Text = Path.GetFileName(res[curImg]);
                 img = new Image<Rgb, Byte>(res[curImg]);
                 imgImage.Image = img;
+                findShape(img);
             }
             catch (System.ArgumentException)
             {
-                txtOutput.Text = "Unexpected file type found";
+                txtOutput.Text = "Unexpected file type";
                 imgImage.Image = null;
             }
         }
@@ -127,16 +246,17 @@ namespace Polygon_Detection
                 txtFileName.Text = Path.GetFileName(res[curImg]);
                 img = new Image<Rgb, Byte>(res[curImg]);
                 imgImage.Image = img;
+                findShape(img);
             }
             catch (System.ArgumentException)
             {
-                txtOutput.Text = "Unexpected file type found";
+                txtOutput.Text = "Unexpected file type";
                 imgImage.Image = null;
             }
         }
         #endregion
 
-        struct Point
+        public struct Point
         {
             public int x, y;
 
