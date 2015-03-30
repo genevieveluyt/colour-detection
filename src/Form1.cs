@@ -197,6 +197,7 @@ namespace Polygon_Detection
 
             try
             {
+                labelFileName.Text = txtFileName.Text;
                 img = new Image<Rgb, Byte>(relPath + "\\" + txtFileName.Text);
                 imgImage.Image = img;
                 findShape(img);
@@ -211,13 +212,11 @@ namespace Polygon_Detection
             }
             catch (FileNotFoundException)
             {
-                labelFileName.Text = txtFileName.Text;
                 txtOutput.Text = "File not found";
                 imgImage.Image = null;
             }
             catch (System.ArgumentException)
             {
-                labelFileName.Text = txtFileName.Text;
                 txtOutput.Text = "Unexpected file type";
                 imgImage.Image = null;
             }
