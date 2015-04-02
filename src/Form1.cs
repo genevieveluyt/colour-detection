@@ -33,6 +33,7 @@ namespace Polygon_Detection
         // is displayed in the GUI
         public void findShape(Image<Rgb, Byte> image)
         {
+            
             points = getPoints(image);
             points = getOuterPoints(points);
             points = removeStraightAngles(points);
@@ -55,10 +56,58 @@ namespace Polygon_Detection
          * @return List<Point> list of coordinates
          */
         public List<Point> getPoints(Image<Rgb, Byte> image) {
-            // Corner Harris
-            // return list of points
 
-            return null;
+            List<Point> points = new List<Point>();
+
+            // raw corner strength image (must be 32-bit float)
+            Image<Gray, float> m_CornerImage = null;
+
+            // inverted thresholded corner strengths (for display)
+            Image<Gray, Byte> m_ThresholdImage = null;
+            
+            Image<Gray, Byte> m_SourceImage = new Image<Gray, byte>(filePaths[curFile]);
+
+            // create corner strength image and do Harris
+            m_CornerImage = new Image<Gray, float>(m_SourceImage.Size);
+            CvInvoke.cvCornerHarris(m_SourceImage, m_CornerImage, 3, 3, 0.01);
+
+            // create and show inverted threshold image
+            m_ThresholdImage = new Image<Gray, Byte>(m_SourceImage.Size);
+            CvInvoke.cvThreshold(m_CornerImage, m_ThresholdImage, 0.0001,
+                255.0, Emgu.CV.CvEnum.THRESH.CV_THRESH_BINARY_INV);
+            imgImage.Image = m_ThresholdImage;
+
+            /* Finding circles and using center
+            Image<Gray, Byte> imgProcessed = m_ThresholdImage.SmoothGaussian(9);
+
+            CircleF[] circles = imgProcessed.HoughCircles(new Gray(100), new Gray(50), 2, imgProcessed.Height / 4, 10, 400)[0];
+
+            foreach (CircleF circle in circles)
+            {
+                PointF p = circle.Center;
+                points.Add(new Point((int)p.X, (int)p.Y));
+                txtOutput.AppendText("\n" + (int)p.X + " " + (int)p.Y);
+            }
+            */
+
+            /* Looking for maxema
+            const double MAX_INTENSITY = 255;
+            int contCorners = 0; 
+            for (int x = 0; x < m_ThresholdImage.Width; x++)
+            {
+                for (int y = 0; y < m_ThresholdImage.Height; y++)
+                {
+                    Gray imagenP = m_ThresholdImage[y,x];
+                    if (imagenP.Intensity == MAX_INTENSITY)
+                    {
+                        
+                    }
+                }
+            }*/
+
+
+
+            return points;
         }
 
         /* Isolates 'outer points' of a set of coordinates.
@@ -82,6 +131,8 @@ namespace Polygon_Detection
          *      excluding those in the middle of straight angles
          */
         public List<Point> removeStraightAngles(List<Point> points) {
+            Point a, b, c;
+
             // for (every three consecutive points, a, b, and c) {
             //     angle = getSmallestAngle(a, b, c)
             //     if (angle is between 180+straightAngleTolerance and 180-straightAngleTolerance) {
