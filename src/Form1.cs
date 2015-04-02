@@ -140,6 +140,15 @@ namespace Polygon_Detection
 
             return "";
         }
+
+        /*
+         * Draws circles around the points on the given image
+         */
+        public void drawCircles(Image<Rgb, Byte> image, List<Point> points)
+        {
+            //CvInvoke.cvCornerHarris ??
+        }
+
         #endregion
 
         #region Form Setup
