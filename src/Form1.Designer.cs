@@ -58,7 +58,6 @@
             this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtOutput.Size = new System.Drawing.Size(280, 129);
             this.txtOutput.TabIndex = 3;
-            this.txtOutput.WordWrap = false;
             // 
             // txtFileName
             // 

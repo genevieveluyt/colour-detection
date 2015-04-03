@@ -33,7 +33,7 @@ namespace Polygon_Detection
         // is displayed in the GUI
         public void findShape(Image<Rgb, Byte> image)
         {
-            
+
             points = getPoints(image);
             points = getOuterPoints(points);
             points = removeStraightAngles(points);
@@ -67,6 +67,7 @@ namespace Polygon_Detection
             
             Image<Gray, Byte> m_SourceImage = new Image<Gray, byte>(filePaths[curFile]);
 
+            /*
             // create corner strength image and do Harris
             m_CornerImage = new Image<Gray, float>(m_SourceImage.Size);
             CvInvoke.cvCornerHarris(m_SourceImage, m_CornerImage, 3, 3, 0.01);
@@ -76,7 +77,7 @@ namespace Polygon_Detection
             CvInvoke.cvThreshold(m_CornerImage, m_ThresholdImage, 0.0001,
                 255.0, Emgu.CV.CvEnum.THRESH.CV_THRESH_BINARY_INV);
             imgImage.Image = m_ThresholdImage;
-
+            */
             /* Finding circles and using center
             Image<Gray, Byte> imgProcessed = m_ThresholdImage.SmoothGaussian(9);
 
@@ -104,8 +105,30 @@ namespace Polygon_Detection
                     }
                 }
             }*/
+            /*
+            m_CornerImage = new Image<Gray, float>(m_SourceImage.Size);
+            CvInvoke.cvCornerHarris(m_SourceImage, m_CornerImage, 3, 3, 0.01);
 
+            // create and show inverted threshold image
+            m_ThresholdImage = new Image<Gray, Byte>(m_SourceImage.Size);
+            CvInvoke.cvThreshold(m_CornerImage, m_ThresholdImage, 0.0001, 255.0, Emgu.CV.CvEnum.THRESH.CV_THRESH_BINARY_INV);
+            imgImage.Image = m_ThresholdImage;
+            imgImage.Image = m_CornerImage;
 
+            const double MAX_INTENSITY = 255;
+            //int contCorners = 0;
+            for (int x = 0; x < m_ThresholdImage.Width; x++)
+            {
+                for (int y = 0; y < m_ThresholdImage.Height; y++)
+                {
+                    Gray imagenP = m_ThresholdImage[y, x];
+                    if (imagenP.Intensity == MAX_INTENSITY)
+                    {
+                        //txtOutput.AppendText("\n" + x + " " + y);
+                    }
+                }
+            } 
+            */
 
             return points;
         }
@@ -195,9 +218,20 @@ namespace Polygon_Detection
         /*
          * Draws circles around the points on the given image
          */
-        public void drawCircles(Image<Rgb, Byte> image, List<Point> points)
+        public void drawCircles(Image<Rgb, Byte> image, List<Point> points, ImageBox imgBox)
         {
-            //CvInvoke.cvCornerHarris ??
+            foreach (Point point in points)
+            {
+                txtOutput.AppendText(point.X + " " + point.Y + Environment.NewLine);
+                CvInvoke.cvCircle(image.Ptr, 
+                                  point, 
+                                  4,
+                                  new MCvScalar(), 
+                                  1, 
+                                  Emgu.CV.CvEnum.LINE_TYPE.CV_AA,
+                                  0);
+            }
+            imgBox.Image = image;   
         }
 
         #endregion
@@ -330,15 +364,5 @@ namespace Polygon_Detection
 
         #endregion
 
-        public struct Point
-        {
-            public int x, y;
-
-            public Point(int p1, int p2)
-            {
-                x = p1;
-                y = p2;
-            }
-        }
     }
 }
