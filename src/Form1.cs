@@ -123,17 +123,36 @@ namespace Polygon_Detection
          *      excluding those in the middle of straight angles
          */
         public List<Point> removeStraightAngles(List<Point> points) {
+
+            if (points.Count < 4)
+                return points;
+
             Point a, b, c;
+            a = points.ElementAt(points.Count-2);
+            b = points.ElementAt(points.Count-1);
+            c = points.ElementAt(0);
 
-            // for (every three consecutive points, a, b, and c) {
-            //     angle = getSmallestAngle(a, b, c)
-            //     if (angle is between 180+straightAngleTolerance and 180-straightAngleTolerance) {
-            //         remove point b from list
-            //     }
-            // }
-            // return list of points
+            for (int i = 0; i < points.Count; i++)
+            {
+                double angle = getSmallestAngle(a, b, c);
+                if (angle < 180 + straightAngleTolerance && angle > 180 - straightAngleTolerance)
+                {
+                    points.Remove(b);
+                    b = c;
+                    if (points.IndexOf(b) > i)              // b is deleted from end of list
+                        c = points.ElementAt(i + 1);
+                    else
+                        c = points.ElementAt(i);
+                }
+                else
+                {
+                    a = b;
+                    b = c;
+                    c = points.ElementAt(i + 1);
+                }
+            }
 
-            return null;
+            return points;
         }
 
         /* Identifies the smallest angle between lines a-b and b-c
