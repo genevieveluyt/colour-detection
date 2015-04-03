@@ -34,6 +34,8 @@ namespace Polygon_Detection
         public void findShape(Image<Rgb, Byte> image)
         {
 
+            image = new Image<Rgb, Byte>(filePaths[curFile]);   // normally this would be passed in already initialized
+
             points = getPoints(image);
             points = getOuterPoints(points);
             points = removeStraightAngles(points);
@@ -66,8 +68,7 @@ namespace Polygon_Detection
             Image<Gray, Byte> m_ThresholdImage = null;
             
             Image<Gray, Byte> m_SourceImage = new Image<Gray, byte>(filePaths[curFile]);
-
-            /*
+            
             // create corner strength image and do Harris
             m_CornerImage = new Image<Gray, float>(m_SourceImage.Size);
             CvInvoke.cvCornerHarris(m_SourceImage, m_CornerImage, 3, 3, 0.01);
@@ -76,24 +77,11 @@ namespace Polygon_Detection
             m_ThresholdImage = new Image<Gray, Byte>(m_SourceImage.Size);
             CvInvoke.cvThreshold(m_CornerImage, m_ThresholdImage, 0.0001,
                 255.0, Emgu.CV.CvEnum.THRESH.CV_THRESH_BINARY_INV);
-            imgImage.Image = m_ThresholdImage;
-            */
-            /* Finding circles and using center
-            Image<Gray, Byte> imgProcessed = m_ThresholdImage.SmoothGaussian(9);
 
-            CircleF[] circles = imgProcessed.HoughCircles(new Gray(100), new Gray(50), 2, imgProcessed.Height / 4, 10, 400)[0];
-
-            foreach (CircleF circle in circles)
-            {
-                PointF p = circle.Center;
-                points.Add(new Point((int)p.X, (int)p.Y));
-                txtOutput.AppendText("\n" + (int)p.X + " " + (int)p.Y);
-            }
-            */
-
-            /* Looking for maxema
-            const double MAX_INTENSITY = 255;
-            int contCorners = 0; 
+            // Looking for maxema
+            const int MASK = 8;     // radius of circles used to cover corner harris output to prevent 
+                                    // multiple detections of the same corner
+            const double MAX_INTENSITY = 0;
             for (int x = 0; x < m_ThresholdImage.Width; x++)
             {
                 for (int y = 0; y < m_ThresholdImage.Height; y++)
@@ -101,34 +89,15 @@ namespace Polygon_Detection
                     Gray imagenP = m_ThresholdImage[y,x];
                     if (imagenP.Intensity == MAX_INTENSITY)
                     {
-                        
+                        Point p = new Point(x, y);
+                        points.Add(p);
+
+                        // cover up points close to point so they won't be detected                   
+                        CircleF circle = new CircleF(p, MASK);
+                        m_ThresholdImage.Draw(circle, new Gray(255), -1);
                     }
                 }
-            }*/
-            /*
-            m_CornerImage = new Image<Gray, float>(m_SourceImage.Size);
-            CvInvoke.cvCornerHarris(m_SourceImage, m_CornerImage, 3, 3, 0.01);
-
-            // create and show inverted threshold image
-            m_ThresholdImage = new Image<Gray, Byte>(m_SourceImage.Size);
-            CvInvoke.cvThreshold(m_CornerImage, m_ThresholdImage, 0.0001, 255.0, Emgu.CV.CvEnum.THRESH.CV_THRESH_BINARY_INV);
-            imgImage.Image = m_ThresholdImage;
-            imgImage.Image = m_CornerImage;
-
-            const double MAX_INTENSITY = 255;
-            //int contCorners = 0;
-            for (int x = 0; x < m_ThresholdImage.Width; x++)
-            {
-                for (int y = 0; y < m_ThresholdImage.Height; y++)
-                {
-                    Gray imagenP = m_ThresholdImage[y, x];
-                    if (imagenP.Intensity == MAX_INTENSITY)
-                    {
-                        //txtOutput.AppendText("\n" + x + " " + y);
-                    }
-                }
-            } 
-            */
+            }
 
             return points;
         }
