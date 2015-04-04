@@ -33,14 +33,13 @@ namespace Polygon_Detection
         // is displayed in the GUI
         public void findShape(Image<Rgb, Byte> image)
         {
-
-            image = new Image<Rgb, Byte>(filePaths[curFile]);   // normally this would be passed in already initialized
-
+                        
             points = getPoints(image);
             points = getOuterPoints(points);
-            points = removeStraightAngles(points);
+            points = removeStraightAngles(points); drawCircles(image, points, imgImage);
 
-            if (isShape(points)) {
+            if (isShape(points))
+            {
                 if (!txtOutput.Text.Equals(""))                 // if textbox is not empty, insert new line first
                     txtOutput.AppendText(Environment.NewLine);
                 txtOutput.AppendText(determineShape(points));
@@ -51,7 +50,6 @@ namespace Polygon_Detection
                     txtOutput.AppendText(Environment.NewLine);
                 txtOutput.AppendText("No shape found");
             }
-
         }
 
         /* Attempts to locate all corners in an image
@@ -112,7 +110,7 @@ namespace Polygon_Detection
             // Convex Hull
             // return list of points
 
-            return null;
+            return points;
         }
 
         /* If angle between any three consecutive points is close to 180
@@ -123,55 +121,88 @@ namespace Polygon_Detection
          *      excluding those in the middle of straight angles
          */
         public List<Point> removeStraightAngles(List<Point> points) {
-
+            
             if (points.Count < 4)
                 return points;
-
+            
             Point a, b, c;
-            a = points.ElementAt(points.Count-2);
-            b = points.ElementAt(points.Count-1);
-            c = points.ElementAt(0);
 
-            for (int i = 0; i < points.Count; i++)
+            /// b is the point that will be removed if a-b-c is a straight angle so start
+            /// with b at index 0
+            a = points.ElementAt(points.Count-1);
+            b = points.ElementAt(0);
+            c = points.ElementAt(1);
+
+            // txtOutput.AppendText("point a:" + a + " b:" + b + " c:" + c + Environment.NewLine);
+            
+            int angle;
+
+            for (int i = 2; i < points.Count; i++)
             {
-                double angle = getSmallestAngle(a, b, c);
+                angle = (int)getSmallestAngle(a, b, c);
+
+                // txtOutput.AppendText("angle: " + angle + Environment.NewLine);
+                
                 if (angle < 180 + straightAngleTolerance && angle > 180 - straightAngleTolerance)
                 {
+                    // txtOutput.AppendText("Remove " + b + Environment.NewLine);
+
+                    i--;
                     points.Remove(b);
                     b = c;
-                    if (points.IndexOf(b) > i)              // b is deleted from end of list
-                        c = points.ElementAt(i + 1);
-                    else
-                        c = points.ElementAt(i);
+                    c = points.ElementAt(i);
                 }
                 else
                 {
                     a = b;
                     b = c;
-                    c = points.ElementAt(i + 1);
+                    c = points.ElementAt(i);
                 }
+                //txtOutput.AppendText(Environment.NewLine);
+                //txtOutput.AppendText("point a:" + a + " b:" + b + " c:" + c + Environment.NewLine);
+            }
+
+            /// The loop ends with c at the last index and b second-to-last.
+            /// Wrap c around to index 0 to check if point at last index should be removed.
+            a = b;
+            b = c;
+            c = points.ElementAt(0);
+            angle = (int)getSmallestAngle(a, b, c);
+
+            if (angle < 180 + straightAngleTolerance && angle > 180 - straightAngleTolerance)
+            {
+                // txtOutput.AppendText("Remove " + b + Environment.NewLine);
+                points.Remove(b);
             }
 
             return points;
         }
 
-        /* Identifies the smallest angle between lines a-b and b-c
+        /* Identifies the smallest angle between lines a-b and b-c in degrees
          * ie. if 90 degrees and 270 degrees are possible, will return 90
          * @return double smallest angle in degrees
          */
         public double getSmallestAngle(Point a, Point b, Point c) {
-            // vector A = vector a - vector b        // A.x = a.x - b.x; A.y = a.y - b.y
-            //     vector B = vector c - vector b
-            //     angle = arccos ( (vector A dot product vector B) / (magnitude vector A * magnitude vector B) )    
-            // use Math.Acos() for arccos which gives radians
-            //         // there is a radiansToDegrees method in the AERO code already??
-            //         // dot product is A.x * B.x + A.y * B.y
-            //         // magnitude of vector A is sqrt( (A.x)^2 + (A.y)^2 )
-    
-            //     return (angle is less than 180 ? angle : 180 - angle)
-            //         // ternary operator
 
-            return 0;
+            Point A = new Point(a.X - b.X, a.Y - b.Y);      // line a-b
+            Point B = new Point(c.X - b.X, c.Y - b.Y);      // line b-c
+            
+            double angle = Math.Acos(vectorDotProduct(A, B) / (vectorMagnitude(A) * vectorMagnitude(B)));
+            angle *= (180.00 / Math.PI);                    // convert from radians to degrees
+            
+            return angle;
+        }
+
+        // Calculates dot product of two 2D vectors
+        public double vectorDotProduct(Point a, Point b)
+        {
+            return (a.X * b.X + a.Y * b.Y);
+        }
+
+        // Calculates magnitude of a 2D vector
+        public double vectorMagnitude(Point p)
+        {
+            return Math.Sqrt(vectorDotProduct(p, p));
         }
 
         /* Attempts to determine if there is significant evidence that a
@@ -210,7 +241,7 @@ namespace Polygon_Detection
         {
             foreach (Point point in points)
             {
-                txtOutput.AppendText(point.X + " " + point.Y + Environment.NewLine);
+                // txtOutput.AppendText(point.X + " " + point.Y + Environment.NewLine);
                 CvInvoke.cvCircle(image.Ptr, 
                                   point, 
                                   4,
