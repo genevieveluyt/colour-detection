@@ -8,6 +8,7 @@ using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV.UI;
+using Polygon_Detection.src;
 
 namespace Polygon_Detection
 {
@@ -18,7 +19,7 @@ namespace Polygon_Detection
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new GUI());
         }
     }
 }
