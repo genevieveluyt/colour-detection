@@ -11,7 +11,6 @@ namespace Polygon_Detection.src
     public class ColourDetection
     {
         //Local variables for processing values
-        //int threshold;
         public struct CustomHsv
         {
             public double Hue;
@@ -28,7 +27,7 @@ namespace Polygon_Detection.src
 
         public override string ToString()
         {
-            return "ColourDetection"; //Change this to be your algorithms name. 
+            return "ColourDetection";
         }
 
         public ColourDetection()
@@ -73,8 +72,9 @@ namespace Polygon_Detection.src
                     CustomHsv pixel = rgbToHsv(image[y, x]);
                     int sat = (int)pixel.Saturation;
                     int val = (int)pixel.Value;
-
-                    // To pick color thresholds I used: http://colorizer.org/
+                    
+                    // Determine colour of pixel
+                    // To pick colour thresholds I used: http://colorizer.org/
                     // and http://i.imgur.com/PKjgfFXm.jpg
 
                     if (val < 2)
@@ -124,7 +124,9 @@ namespace Polygon_Detection.src
                     }
                 }
             }
+            // To get a list of the number of pixels of each colour in descending order use:
             return reportAllColours(colourNames, colours);
+            // To get the dominant colour (most pixels are in this colour) use:
             //return getColour(maxColour(colourNames, colours));
         }
 
@@ -154,7 +156,7 @@ namespace Polygon_Detection.src
             return colourNames[index];
         }
 
-        // returns the string value of a colour (as defined by class constants)
+        // returns the string value of a colour (as defined by constants in Process())
         private string getColour(int col)
         {
             string colour = null;
@@ -180,7 +182,7 @@ namespace Polygon_Detection.src
         private string reportAllColours(int[] colourNames, int[] colours)
         {
 
-            // Sorts the colours (excludes Black and White)
+            // Sorts the colours
             // To include Black and White, use:
             Array.Sort(colours, colourNames);
             // To exclude Black and White, use:
@@ -189,7 +191,7 @@ namespace Polygon_Detection.src
             string output = "";
 
             // Goes through amount of pixels of each colour in reverse order
-            // (greatest to least) and skips Black and White
+            // (greatest to least)
             // To include Black and White, use:
             for (int i = colours.Length - 1; i >= 0; i--)
             // To exclude Black and White, use:
@@ -202,7 +204,9 @@ namespace Polygon_Detection.src
         }
 
         // Emgu Hsv has hue, saturation and value ranges going up to 180, 255 and 255 respectively.
-        // source of formulas: http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
+        // Make a custom Hsv structure with ranges 360(degrees), 100(%) and 100(%) which is used by
+        // most graphical representations of Hsv.
+        // Source of formulas: http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
         public static CustomHsv rgbToHsv(Bgra pixel)
         {
             int red = (int)pixel.Red;
